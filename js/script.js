@@ -13,7 +13,7 @@ const LAUNCHER_HEIGHT = 50;
 launcher.attrs({
   width: `${LAUNCHER_WIDTH}px`,
   height: `${LAUNCHER_HEIGHT}px`,
-  fill: 'tomato',
+  fill: 'rebeccapurple',
   x: (svgWidth - LAUNCHER_WIDTH) / 2,
   y: svgHeight - LAUNCHER_HEIGHT,
 });
@@ -45,6 +45,7 @@ const handleClick = () => {
   svg
     .append('rect')
     .attrs({
+      class: 'firework',
       fill: 'white',
       height: 15,
       width: 2,
