@@ -19,8 +19,7 @@ launcher.attrs({
 });
 
 // (launcher is offset by the border + half the launcher width)
-const launcherOffset = window.innerWidth * 0.1 + LAUNCHER_WIDTH / 2;
-
+const windowOffset = window.innerWidth * 0.1;
 // move launcher on mousemove
 const handleMouseMove = () => {
   // get the mouse coordinates
@@ -28,12 +27,11 @@ const handleMouseMove = () => {
   const mouseY = d3.event.pageY;
 
   // move the launcher to the mouse position
-  launcher.attr('x', mouseX - launcherOffset);
+  launcher.attr('x', mouseX - windowOffset - LAUNCHER_WIDTH / 2);
 };
 
 const handleClick = () => {
   const [mouseX, mouseY] = [d3.event.pageX, d3.event.pageY];
-  console.log(mouseY);
   // get launcher position
   const launcherBbox = launcher.node().getBoundingClientRect();
 
@@ -41,7 +39,7 @@ const handleClick = () => {
   const FIREWORK_DURATION_MS = 1000;
   const EXPLOSION_DURATION_MS = 500;
   const EXPLOSION_Y = mouseY - window.innerHeight * 0.1;
-  const START_X = launcherBbox.x - launcherOffset - 1;
+  const START_X = launcherBbox.x - windowOffset + LAUNCHER_WIDTH / 2 - 1;
 
   // append the firework
   svg
@@ -90,32 +88,43 @@ const handleClick = () => {
       .remove();
 
     // append a line to the target position
-    for (let i = 0; i < 30; i++) {
-      svg
-        .append('line')
-        .attrs({
-          // lines have x1 y1, x2 y2 for the start and end coords
-          // start at the target
-          x1: START_X,
-          y1: EXPLOSION_Y,
-          x2: START_X,
-          y2: EXPLOSION_Y,
-          // the stroke is a random hue, 90% saturation, 80% lightness
-          stroke: `hsl(${Math.random() * 360},90%,80%)`,
-          'stroke-width': 1,
-        })
-        .transition()
-        .duration(EXPLOSION_DURATION_MS)
-        .attrs({
-          x2: START_X + 150 * Math.random() * (Math.random() > 0.5 ? 1 : -1),
-          y2:
-            EXPLOSION_Y + 150 * Math.random() * (Math.random() > 0.5 ? 1 : -1),
-        })
-        .styles({
-          opacity: 0,
-        })
-        .remove();
-    }
+    setTimeout(() => {
+      for (let i = 0; i < 30; i++) {
+        svg
+          .append('line')
+          .attrs({
+            // lines have x1 y1, x2 y2 for the start and end coords
+            // start at the target
+            x1: START_X,
+            y1: EXPLOSION_Y,
+            x2: START_X,
+            y2: EXPLOSION_Y,
+            // the stroke is a random hue, 90% saturation, 80% lightness
+            stroke: `hsl(${Math.random() * 360},90%,80%)`,
+            'stroke-width': 1,
+          })
+          .styles({
+            opacity: 0,
+          })
+          .transition()
+          .duration(EXPLOSION_DURATION_MS)
+          .attrs({
+            x2: START_X + 150 * Math.random() * (Math.random() > 0.5 ? 1 : -1),
+            y2:
+              EXPLOSION_Y +
+              150 * Math.random() * (Math.random() > 0.5 ? 1 : -1),
+          })
+          .styles({
+            opacity: 1,
+          })
+          .transition()
+          .duration(EXPLOSION_DURATION_MS / 3)
+          .styles({
+            opacity: 0,
+          })
+          .remove();
+      }
+    }, EXPLOSION_DURATION_MS);
   }, FIREWORK_DURATION_MS);
 };
 

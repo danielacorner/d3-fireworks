@@ -20,3 +20,6 @@ svg {
   border-radius: 40px;
   box-shadow: inset 0px 1px 9px 15px rgba(0, 0, 0, 0.6);
 }
+.launcher {
+  z-index: 999;
+}
